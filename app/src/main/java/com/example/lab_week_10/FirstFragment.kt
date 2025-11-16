@@ -11,9 +11,7 @@ import com.example.lab_week_10.viewmodels.TotalViewModel
 
 class FirstFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var viewModel: TotalViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,19 +23,17 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        prepareViewModel()
+        // ambil ViewModel dari Activity
+        viewModel = ViewModelProvider(requireActivity())[TotalViewModel::class.java]
+
+        // observe total ke fragment
+        viewModel.total.observe(viewLifecycleOwner) { totalValue ->
+            updateText(totalValue)
+        }
     }
 
     private fun updateText(total: Int) {
         view?.findViewById<TextView>(R.id.text_total)?.text =
             getString(R.string.text_total, total)
-    }
-
-    private fun prepareViewModel() {
-        val viewModel = ViewModelProvider(requireActivity())[TotalViewModel::class.java]
-
-        viewModel.total.observe(viewLifecycleOwner) { total ->
-            updateText(total)
-        }
     }
 }
