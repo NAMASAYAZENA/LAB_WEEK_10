@@ -1,59 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:gravity="center"
     android:padding="24dp"
-    android:gravity="top|center_horizontal"
-    android:background="#F5F5F5"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <!-- Title -->
     <TextView
         android:id="@+id/text_total"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_total"
+        android:text="0"
+        android:textSize="40sp"
         android:textStyle="bold"
-        android:textSize="36sp"
-        android:textColor="#333333"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-    <!-- Increment Button -->
     <Button
         android:id="@+id/button_increment"
-        android:layout_width="220dp"
-        android:layout_height="55dp"
-        android:text="@string/button_increment"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:backgroundTint="@color/purple_500"
-        android:textColor="@android:color/white"
-        android:elevation="6dp"
-        android:layout_marginBottom="30dp"/>
+        android:text="Increment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-    <!-- Card for Fragment -->
-    <LinearLayout
+    <Button
+        android:id="@+id/buttonSave"
+        android:text="Save Total"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/buttonHistory"
+        android:text="History"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:background="@android:color/white"
-        android:elevation="8dp"
-        android:padding="18dp"
-        android:layout_margin="6dp"
-        android:orientation="vertical"
-        android:clipToPadding="false"
-        android:radius="16dp">
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragment_container"
-            android:name="com.example.lab_week_10.FirstFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/fragment_first"/>
-
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="20dp" />
 
 </LinearLayout>

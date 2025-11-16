@@ -2,68 +2,46 @@ package com.example.lab_week_10
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
-import androidx.room.Room
-import com.example.lab_week_10.database.Total
-import com.example.lab_week_10.database.TotalDatabase
-import com.example.lab_week_10.viewmodels.TotalViewModel
+import androidx.activity.viewModels
+import com.example.lab_week_10.data.AppDatabase
+import com.example.lab_week_10.data.CounterRepository
+import com.example.lab_week_10.databinding.ActivityMainBinding
+import com.example.lab_week_10.viewmodel.CounterViewModel
+import com.example.lab_week_10.viewmodel.CounterViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private val db by lazy { prepareDatabase() }
+    private lateinit var binding: ActivityMainBinding
 
-    private val viewModel by lazy {
-        ViewModelProvider(this)[TotalViewModel::class.java]
+    private val viewModel: CounterViewModel by viewModels {
+        CounterViewModelFactory(
+            CounterRepository(
+                AppDatabase.getDatabase(this).counterDao()
+            )
+        )
     }
+
+    private var currentTotal = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        initializeValueFromDatabase()
-        prepareViewModel()
-    }
-
-    private fun prepareDatabase(): TotalDatabase {
-        return Room.databaseBuilder(
-            applicationContext,
-            TotalDatabase::class.java,
-            "total-database"
-        ).allowMainThreadQueries().build()
-    }
-
-    private fun initializeValueFromDatabase() {
-        val data = db.totalDao().getTotal(ID)
-        if (data.isEmpty()) {
-            db.totalDao().insert(Total(id = 1, total = 0))
-        } else {
-            viewModel.setTotal(data.first().total)
-        }
-    }
-
-    private fun prepareViewModel() {
-        viewModel.total.observe(this) { total ->
-            updateText(total)
+        binding.buttonIncrement.setOnClickListener {
+            currentTotal++
+            binding.textTotal.text = currentTotal.toString()
         }
 
-        findViewById<Button>(R.id.button_increment).setOnClickListener {
-            viewModel.incrementTotal()
+        binding.buttonSave.setOnClickListener {
+            viewModel.insertNewTotal(currentTotal)
         }
-    }
 
-    private fun updateText(total: Int) {
-        findViewById<TextView>(R.id.text_total).text =
-            getString(R.string.text_total, total)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        db.totalDao().update(Total(ID, viewModel.total.value!!))
-    }
-
-    companion object {
-        const val ID: Long = 1
+        binding.buttonHistory.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HistoryFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }
